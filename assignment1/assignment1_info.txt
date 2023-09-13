@@ -1,0 +1,19 @@
+Goals for This Assignment
+
+By the time you have completed this work, you should be able to:
+
+Write semi-functional code in Python
+Implement a basic Boolean evaluator in Python
+Implement a basic SAT solver using the semantic tableau technique, in Python
+
+Step-by-Step Instructions
+
+Step 1: Implement an Evaluator of Boolean Expressions
+
+For this assignment, you'll be using Python. While Python is not generally considered a functional language, we will be writing code that is mostly functional in nature. Notably, we will be using immutable linked lists, as well as immutable maps.
+
+Download boolean_evaluator.py. You will need to define a recursive evaluator of Boolean expressions in this file. The comments in the file provide more details.
+
+Step 2: Implement a SAT Solver Based on Semantic Tableau
+
+Download sat_solver.py. You will need to define a SAT solver using the semantic tableau technique. The comments in the file provide more details.
