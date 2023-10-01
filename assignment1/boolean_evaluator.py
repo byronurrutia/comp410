@@ -86,6 +86,7 @@ def eval_expr(expression):
     if (isinstance(expression, Or) or isinstance(expression, And)) and not isinstance(expression.left, bool) and not isinstance(expression.right, bool):
         if eval_expr(expression.left) == False and isinstance(expression, Or):
             return eval_expr(expression.right)
+        # only one side of the Or expression needs to be true
         if eval_expr(expression.left) == True and isinstance(expression, Or):
             return True
         # both sides in a And expression need to be true
