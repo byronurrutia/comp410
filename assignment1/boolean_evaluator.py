@@ -33,9 +33,11 @@ class Binop:
             self.op_string,
             str(self.right))
 
+
 class And(Binop):
     def __init__(self, left, right):
         super().__init__(left, right, "&&")
+
 
 class Or(Binop):
     def __init__(self, left, right):
@@ -66,8 +68,31 @@ class Or(Binop):
 # 6.) You do not need to write a lot of code; my reference solution is 7 lines long.
 #     If you start needing a lot more code than that, ask for help to make sure
 #     you're still on-track.
+
+
 def eval_expr(expression):
-    pass
+    # Wether it is And or Or, if both sides or true: the expression is true
+    if expression.left == True and expression.right == True:
+        return True
+    # One side only has to be true in an OR for it to be a true expression
+    if (expression.left == True and expression.right == False) and isinstance(expression, Or):
+        return True
+    # Same as above but vise versa
+    if (expression.right == True and expression.left == False) and isinstance(expression, Or):
+        return True
+    # If the expression is a deeply nested expresion we need to go through one branch (left) and check for it boolean
+    # value then check if it fits the rules above then check the the right side if the expression
+    # is nested in a Or and see its boolean value
+    if isinstance(expression, Or) and not isinstance(expression.left, bool) and not isinstance(expression.right, bool):
+        if eval_expr(expression.left) == False:
+            return eval_expr(expression.right)
+        else:
+            return True
+    # If all the conditions that make the expression true have not been fufilled, then we know that the
+    # expression is false
+    else:
+        return False
+
 
 # tests that evaluate to true
 true_tests = [And(True, True),
@@ -85,6 +110,7 @@ false_tests = [And(True, False),
                And(Or(True, False),
                    Or(False, False))]
 
+
 def run_tests():
     tests_failed = False
     for test in true_tests:
@@ -101,6 +127,7 @@ def run_tests():
 
     if not tests_failed:
         print("All tests passed")
+
 
 if __name__ == "__main__":
     run_tests()
