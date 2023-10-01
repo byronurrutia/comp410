@@ -80,14 +80,20 @@ def eval_expr(expression):
     # Same as above but vise versa
     if (expression.right == True and expression.left == False) and isinstance(expression, Or):
         return True
-    # If the expression is a deeply nested expresion we need to go through one branch (left) and check for it boolean
+    # If the expression is a deeply nested expresion we need to go through one branch (left) and check for the boolean
     # value then check if it fits the rules above then check the the right side if the expression
     # is nested in a Or and see its boolean value
-    if isinstance(expression, Or) and not isinstance(expression.left, bool) and not isinstance(expression.right, bool):
-        if eval_expr(expression.left) == False:
+    if (isinstance(expression, Or) or isinstance(expression, And)) and not isinstance(expression.left, bool) and not isinstance(expression.right, bool):
+        if eval_expr(expression.left) == False and isinstance(expression, Or):
             return eval_expr(expression.right)
-        else:
+        if eval_expr(expression.left) == True and isinstance(expression, Or):
             return True
+        # both sides in a And expression need to be true
+        if eval_expr(expression.left) == False and isinstance(expression, And):
+            return False
+        # if one side of the And expression is True check the other side
+        if eval_expr(expression.left) == True and isinstance(expression, And):
+            return eval_expr(expression.right)
     # If all the conditions that make the expression true have not been fufilled, then we know that the
     # expression is false
     else:
