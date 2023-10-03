@@ -71,34 +71,22 @@ class Or(Binop):
 
 
 def eval_expr(expression):
-    # Wether it is And or Or, if both sides or true: the expression is true
-    if expression.left == True and expression.right == True:
+    # Evaluate the expression and return its value
+    if expression == True:
         return True
-    # One side only has to be true in an OR for it to be a true expression
-    if (expression.left == True and expression.right == False) and isinstance(expression, Or):
-        return True
-    # Same as above but vise versa
-    if (expression.right == True and expression.left == False) and isinstance(expression, Or):
-        return True
-    # If the expression is a deeply nested expresion we need to go through one branch (left) and check for the boolean
-    # value then check if it fits the rules above then check the the right side if the expression
-    # is nested in a Or and see its boolean value
-    if (isinstance(expression, Or) or isinstance(expression, And)) and not isinstance(expression.left, bool) and not isinstance(expression.right, bool):
-        if eval_expr(expression.left) == False and isinstance(expression, Or):
-            return eval_expr(expression.right)
-        # only one side of the Or expression needs to be true
-        if eval_expr(expression.left) == True and isinstance(expression, Or):
-            return True
-        # both sides in a And expression need to be true
-        if eval_expr(expression.left) == False and isinstance(expression, And):
-            return False
-        # if one side of the And expression is True check the other side
-        if eval_expr(expression.left) == True and isinstance(expression, And):
-            return eval_expr(expression.right)
-    # If all the conditions that make the expression true have not been fufilled, then we know that the
-    # expression is false
-    else:
+    # Evaluate the expression and return its value
+    if expression == False:
         return False
+    # Evaluate both sides of the expression and return both sides of the AST with a Or operation
+    if isinstance(expression, Or):
+        leftResult = eval_expr(expression.left)
+        rightResult = eval_expr(expression.right)
+        return leftResult or rightResult
+    if isinstance(expression, And):
+        # Evaluate both sides of the expression and return both sides of the AST sides with a And operation
+        leftResult = eval_expr(expression.left)
+        rightResult = eval_expr(expression.right)
+        return leftResult and rightResult
 
 
 # tests that evaluate to true

@@ -39,6 +39,7 @@ class Literal:
         else:
             return "!{}".format(self.variable)
 
+
 class Binop:
     def __init__(self, left, right, op_string):
         self.left = left
@@ -51,9 +52,11 @@ class Binop:
             self.op_string,
             str(self.right))
 
+
 class And(Binop):
     def __init__(self, left, right):
         super().__init__(left, right, "&&")
+
 
 class Or(Binop):
     def __init__(self, left, right):
@@ -61,8 +64,10 @@ class Or(Binop):
 
 # naive immutable map implementation
 # just does a copy over an underlying dict
+
+
 class ImmutableMap:
-    def __init__(self, mapping = None):
+    def __init__(self, mapping=None):
         self.mapping = mapping if mapping is not None else dict()
 
     def add(self, key, value):
@@ -76,9 +81,11 @@ class ImmutableMap:
     def get(self, key):
         return self.mapping[key]
 
+
 class List:
     def __init__(self):
         pass
+
 
 class Nil(List):
     def __init__(self):
@@ -87,12 +94,13 @@ class Nil(List):
     def __str__(self):
         return "nil"
 
+
 class Cons(List):
     def __init__(self, head, tail):
         super().__init__()
         self.head = head
         self.tail = tail
-        
+
     def __str__(self):
         return "cons({}, {})".format(self.head, self.tail)
 
@@ -156,7 +164,7 @@ def add_literal(immutable_map, variable, boolean):
 # to try to find a satisfying solution.  The list of expressions represents expressions
 # which must all be true for a satisfying solution.  The `ImmutableMap` instance
 # represents truth values assigned so far for any literals.
-#
+
 # You need to implement solve.  To this end, the following hints may be helpful:
 # 1.) solve needs to be recursive.
 # 2.) If the list of expressions is empty (determinable by checking if `goals` is an
@@ -179,24 +187,61 @@ def add_literal(immutable_map, variable, boolean):
 #     If you start needing a lot more code than that, ask for help to make sure
 #     you're still on-track.
 #
+
+
 def solve(goals, literals):
-    pass
+    # if the immuntable list is empty, return the mapping of the literals
+    if isinstance(goals, Nil):
+        return literals
+    # if the front of the list is a literal, then add it to the map if possible
+    if isinstance(goals.head, Literal):
+        newLiterals = add_literal(
+            literals, goals.head.variable, goals.head.is_positive)
+        # if it is not possible (not satisifiable) return none
+        if newLiterals == None:
+            return None
+        else:
+            # if the mapping of the new literal works, recursive solve with the rest of the list and new mapping
+            return solve(goals.tail, newLiterals)
+    # if the head is Or:
+    if isinstance(goals.head, Or):
+        # make a new universe with the left side and the rest of the list
+        newList = Cons(goals.head.left, goals.tail)
+        # evaluate the new univers
+        newSolve = solve(newList, literals)
+        # if it is not satisfiable
+        if newSolve == None:
+            # create a new universe with the right side and the rest of the list
+            newList = Cons(goals.head.right, goals.tail)
+            # solve it to see if you get a non satis or satis
+            return solve(newList, literals)
+        else:
+            # if the left side is satisfiable then we know the Or evaluates to true
+            return newSolve
+    # if the head is And:
+    if isinstance(goals.head, And):
+        # take out the And from the list and make the new list
+        newList = Cons(goals.head.left, Cons(goals.head.right, goals.tail))
+        return solve(newList, literals)
+
 
 def solve_one(formula):
     return solve(Cons(formula, Nil()), ImmutableMap())
 
+
 # tests that should be satisfiable
 sat_tests = [And(Or(Literal("a", True),
                     Literal("b", False)),
-                 Literal("b", True)), # (a || !b) && b
+                 Literal("b", True)),  # (a || !b) && b
              And(Or(Literal("x", True),
                     Literal("y", False)),
                  Or(Literal("y", False),
-                    Literal("z", True)))] # (x || !y) && (!y || z)
+                    Literal("z", True)))]  # (x || !y) && (!y || z)
 
 # tests that should be unsatisfiable
 unsat_tests = [And(Literal("x", True),
-                   Literal("x", False))] # x && !x
+                   Literal("x", False))]  # x && !x
+
 
 def run_tests():
     tests_failed = False
@@ -214,6 +259,7 @@ def run_tests():
 
     if not tests_failed:
         print("All tests passed")
+
 
 if __name__ == "__main__":
     run_tests()
