@@ -71,22 +71,29 @@ class Or(Binop):
 
 
 def eval_expr(expression):
-    # Evaluate the expression and return its value
-    if expression == True:
-        return True
-    # Evaluate the expression and return its value
-    if expression == False:
-        return False
-    # Evaluate both sides of the expression and return both sides of the AST with a Or operation
     if isinstance(expression, Or):
-        leftResult = eval_expr(expression.left)
-        rightResult = eval_expr(expression.right)
-        return leftResult or rightResult
+        return eval_expr(expression.left) or eval_expr(expression.right)
     if isinstance(expression, And):
-        # Evaluate both sides of the expression and return both sides of the AST sides with a And operation
-        leftResult = eval_expr(expression.left)
-        rightResult = eval_expr(expression.right)
-        return leftResult and rightResult
+        return eval_expr(expression.left) and eval_expr(expression.right)
+    else:
+        return expression
+
+    # # Evaluate the expression and return its value
+    # if expression == True:
+    #     return True
+    # # Evaluate the expression and return its value
+    # if expression == False:
+    #     return False
+    # # Evaluate both sides of the expression and return both sides of the AST with a Or operation
+    # if isinstance(expression, Or):
+    #     leftResult = eval_expr(expression.left)
+    #     rightResult = eval_expr(expression.right)
+    #     return leftResult or rightResult
+    # if isinstance(expression, And):
+    #     # Evaluate both sides of the expression and return both sides of the AST sides with a And operation
+    #     leftResult = eval_expr(expression.left)
+    #     rightResult = eval_expr(expression.right)
+    #     return leftResult and rightResult
 
 
 # tests that evaluate to true

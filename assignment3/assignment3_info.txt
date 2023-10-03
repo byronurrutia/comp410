@@ -1,0 +1,14 @@
+Goals for This Assignment
+
+By the time you have completed this work, you should be able to:
+
+Define recursive rules in Prolog
+Use structures in Prolog
+
+tep 1: Read Chapters 8-9 of the Amzi! Adventure in Prolog Tutorial, and Complete Related Exercises
+
+There is only a single big step for this assignment: read chapters 8-9 of the Amzi! Adventure in Prolog Tutorial. Links to the individual chapters are on the left side of the screen.
+
+You must complete all of the above exercises. It is recommended to first read a chapter, then complete the exercises for that chapter, as opposed to trying to read in bulk and then complete the exercises in bulk.
+
+While the turnaround time on this assignment is pretty short, this reading should take a proportionally small amount of time.
